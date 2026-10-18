@@ -1,0 +1,441 @@
+/* ===== Reset / base ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --accent-blue: #45bdf5;
+  /* labels + links (sky blue) */
+  --link-blue: #45bdf5;
+  /* link text */
+  --login-grey: #a7adb3;
+  /* disabled Log In button */
+  --input-border: #d9d9d9;
+  /* light field border (password) */
+  --input-border-strong: #4a4a4a;
+  /* username field border */
+  --divider-grey: #d9d9d9;
+  /* OR lines */
+  --or-grey: #c2c2c2;
+  /* OR text */
+  --text-dark: #1a1a1a;
+  /* body text */
+  --black-btn: #000000;
+  /* social buttons */
+  --cursor-green: #22c55e;
+  /* caret (green, as in the design) */
+  --bg: #ffffff;
+  /* white base */
+  --bg-deep: #ffffff;
+  --brand-dim: #8fb7ec;
+  --back-grey: #cfcfcf;
+  /* back arrow */
+  --save-grey: #555555;
+  /* save-info text */
+
+  /* ===== Fit-to-screen sizing =====
+     The page is a vertical stack of 474px of elements (text, inputs, buttons)
+     and 362px of gaps between them, designed at 1x.
+       --e scales the elements: follows screen height, and shrinks on narrow
+           screens so text never wraps.
+       --s scales the gaps: whatever height is left after the elements.
+     So 474 * e + 362 * s always equals the visible screen height, and the
+     whole page fits exactly on any phone. If you add or resize anything
+     vertical, update 474 / 362 below. */
+  --vh: 1vh;
+  --e: clamp(0.7px,
+      min(calc(0.5px + var(--vh) * 100 / 1636), calc(min(100vw, 480px) / 390)),
+      1.1px);
+  --s: max(0.2px, calc((var(--vh) * 100 - 2px - 474 * var(--e)) / 362));
+}
+
+/* dvh = the real visible height on mobile (excludes the browser's toolbars) */
+@supports (height: 1dvh) {
+  :root {
+    --vh: 1dvh;
+  }
+}
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: #ffffff;
+  color: var(--text-dark);
+  font-family: "Helvetica Neue", Helvetica, Arial, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(var(--vh) * 100);
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ===== Top nav (back arrow) ===== */
+.top-nav {
+  display: flex;
+  padding: calc(10 * var(--s)) calc(16 * var(--e)) 0;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  height: calc(34 * var(--e));
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--back-grey);
+  font-size: calc(30 * var(--e));
+  line-height: 1;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+/* ===== Brand: "The Future" / animated "Future AI" ===== */
+.brand {
+  text-align: center;
+  margin: 4px 0 26px;
+}
+
+.brand-label {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--brand-dim);
+  padding-left: 0.42em;
+  /* balance the trailing letter-spacing */
+  animation: brand-fade 1s ease 0.1s both;
+}
+
+.brand-ai {
+  margin-top: 8px;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.brand-ai-text {
+  display: inline-block;
+  background: linear-gradient(100deg,
+      #1e5fd8 0%, #46c6ff 25%, #ffffff 42%, #46c6ff 60%, #1e5fd8 85%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgba(70, 198, 255, 0.35));
+  animation:
+    brand-sheen 4.5s linear infinite,
+    brand-rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.brand-underline {
+  display: block;
+  width: 150px;
+  height: 2px;
+  margin: 14px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #46c6ff, transparent);
+  animation: brand-scan 3.2s ease-in-out infinite;
+}
+
+@keyframes brand-sheen {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: -300% 50%;
+  }
+}
+
+@keyframes brand-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes brand-fade {
+  from {
+    opacity: 0;
+    letter-spacing: 0.7em;
+  }
+
+  to {
+    opacity: 1;
+    letter-spacing: 0.42em;
+  }
+}
+
+@keyframes brand-scan {
+
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleX(0.55);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* ===== Main login ===== */
+.login {
+  flex: 1;
+  padding: calc(10 * var(--s)) calc(26 * var(--e)) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  text-align: center;
+  font-size: calc(34 * var(--e));
+  line-height: calc(40 * var(--e));
+  font-weight: 400;
+  color: var(--text-dark);
+  /* a little breathing room above the heading, matching the reference */
+  margin: calc(18 * var(--s)) 0 calc(34 * var(--s));
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  color: var(--accent-blue);
+  font-size: calc(14 * var(--e));
+  line-height: calc(17 * var(--e));
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  margin-bottom: calc(10 * var(--s));
+}
+
+.pwd-label {
+  margin-top: calc(26 * var(--s));
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.text-input {
+  display: block;
+  width: 100%;
+  height: calc(54 * var(--e));
+  border: 1px solid var(--input-border-strong);
+  border-radius: 8px;
+  padding: 0 calc(46 * var(--e)) 0 calc(16 * var(--e));
+  /* 16px minimum stops iOS from zooming in when the field is tapped */
+  font-size: max(16px, calc(17 * var(--e)));
+  color: var(--text-dark);
+  outline: none;
+  background: #ffffff;
+  caret-color: var(--cursor-green);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* password field uses the lighter border */
+.pwd-label+.input-wrap .text-input {
+  border-color: var(--input-border);
+}
+
+.text-input:focus {
+  border-color: #45bdf5;
+  box-shadow: 0 0 0 3px rgba(69, 189, 245, 0.16);
+}
+
+.eye-btn {
+  position: absolute;
+  right: calc(12 * var(--e));
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+}
+
+.eye-btn svg {
+  width: calc(24 * var(--e));
+  height: calc(24 * var(--e));
+}
+
+.small-link {
+  margin-top: calc(16 * var(--s));
+}
+
+.link {
+  color: var(--link-blue);
+  text-decoration: none;
+  font-size: calc(16 * var(--e));
+  line-height: calc(19 * var(--e));
+  font-weight: 500;
+}
+
+/* ===== Log In button ===== */
+.login-btn {
+  margin-top: calc(40 * var(--s));
+  height: calc(58 * var(--e));
+  border: none;
+  border-radius: 30px;
+  background: var(--login-grey);
+  color: #ffffff;
+  font-size: calc(20 * var(--e));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.login-btn:not(:disabled) {
+  background: #45bdf5;
+  color: #fff;
+  box-shadow: 0 8px 26px rgba(69, 189, 245, 0.3);
+}
+
+.login-btn:disabled {
+  cursor: default;
+}
+
+.forgot-link {
+  text-align: center;
+  margin-top: calc(26 * var(--s));
+  align-self: center;
+}
+
+/* ===== OR divider ===== */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: calc(14 * var(--e));
+  margin: calc(54 * var(--s)) 0 calc(34 * var(--s));
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: var(--divider-grey);
+}
+
+.or {
+  color: var(--or-grey);
+  font-size: calc(17 * var(--e));
+  line-height: calc(20 * var(--e));
+  font-weight: 500;
+}
+
+/* ===== Social buttons ===== */
+.social-btn {
+  width: 100%;
+  height: calc(60 * var(--e));
+  border: none;
+  border-radius: 30px;
+  background: var(--black-btn);
+  color: #fff;
+  font-size: calc(19 * var(--e));
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(12 * var(--e));
+  cursor: pointer;
+  margin-bottom: calc(20 * var(--s));
+}
+
+.social-btn:last-of-type {
+  margin-bottom: 0;
+}
+
+.g-logo,
+.passkey-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.g-logo svg,
+.passkey-icon svg {
+  width: calc(26 * var(--e));
+  height: calc(26 * var(--e));
+}
+
+.social-text {
+  line-height: 1;
+}
+
+/* ===== Save login row ===== */
+.save-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--e));
+  margin: calc(30 * var(--s)) 0 calc(24 * var(--s));
+  cursor: pointer;
+}
+
+.save-check {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-ui {
+  width: calc(22 * var(--e));
+  height: calc(22 * var(--e));
+  border-radius: 5px;
+  background: #ffffff;
+  border: 2px solid var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkbox-ui svg {
+  stroke: var(--accent-blue);
+  width: calc(16 * var(--e));
+  height: calc(16 * var(--e));
+}
+
+.save-check:not(:checked)+.checkbox-ui {
+  background: transparent;
+  border: 2px solid rgba(69, 189, 245, 0.5);
+}
+
+.save-check:not(:checked)+.checkbox-ui svg {
+  visibility: hidden;
+}
+
+.save-text {
+  color: var(--save-grey);
+  font-size: calc(17 * var(--e));
+  line-height: calc(22 * var(--e));
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Honor reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
